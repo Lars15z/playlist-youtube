@@ -52,7 +52,7 @@ Bibliotecas/Ferramentas utilizadas:
     </font>
   </a>
   <font>
-      Armazenamento de dados do React Native https://www.npmjs.com/package/react-native-uuid
+      Armazenamento de dados do React Native
    </font>
 </li>
 
