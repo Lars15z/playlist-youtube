@@ -11,6 +11,7 @@ interface ListAllProps {
     name: string;
     description: string;
     link: string;
+    assistir: string;
 }
 
 export function Home({ navigation } : any) {
@@ -67,25 +68,32 @@ export function Home({ navigation } : any) {
             renderItem={({ item }) => (
                 <VStack p={1}>
                     
-                    <VStack p={1} w={195} h={240} bg="emerald.600" borderRadius={20}>
-                        <VStack alignItems="flex-end">
+                    <VStack p={1} w={195} h={240} bg={item.assistir == "Importante" ? "red.600" : "emerald.600"} borderRadius={20}>
+                        <HStack justifyContent="space-between" alignItems="center" ml={3}>
+                            {
+                                item.link.indexOf("https://youtu") == 0 && item.link.indexOf("https://www.youtu") ? <AntDesign name="youtube" size={24} color="white" />
+                                :
+                                item.link.indexOf("https://github") == 0 ? <AntDesign name="github" size={24} color="white" />
+                                : ""
+                            }
+                            
                             <IconButton
                             icon={
                                 <Ionicons name="trash" size={24} color="white" />
                             }
                             onPress={() => handleRemove(item.id)}
                             />
-                            
-                        </VStack>
+                        </HStack>
                         <TouchableOpacity onPress={() => handleAction(item)} style={{ marginTop: -3, justifyContent: "center", alignItems: "center" }}>
                             <Text numberOfLines={1} w={180} textAlign="center" fontSize={24} color="trueGray.100">
                                 { item.name }
                             </Text>
                             <Text numberOfLines={1} w={180} textAlign="center" fontSize={18} color="warmGray.200">
-                                { item.description }
+                                { item.assistir }
                             </Text>
                             
                             <VStack>
+                                
                                 <Image
                                 style={{ width: 170, height: 100, borderRadius: 5, marginVertical: 20 }}
                                 source={{

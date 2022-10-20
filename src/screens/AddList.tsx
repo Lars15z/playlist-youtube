@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Heading, HStack, IconButton, Input, Text, Toast, VStack } from 'native-base';
+import { Heading, HStack, IconButton, Input, Select, Text, Toast, VStack } from 'native-base';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 
 export function AddList({ navigation: { goBack } } : any) {
@@ -12,6 +12,9 @@ export function AddList({ navigation: { goBack } } : any) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [link, setLink] = useState("");
+    const [assistir, setAssistir] = useState("");
+
+    const { getItem, setItem } = useAsyncStorage("@playlist-youtube:list");
 
   async function handleNew() {
 
@@ -22,15 +25,16 @@ export function AddList({ navigation: { goBack } } : any) {
         id,
         name,
         description,
-        link
+        link,
+        assistir
       }
 
-      const response = await AsyncStorage.getItem("@playlist-youtube:list");
+      const response = await getItem();
       const previousData = response ? JSON.parse(response) : [];
 
       const data = [...previousData, newData];
 
-      await AsyncStorage.setItem("@playlist-youtube:list", JSON.stringify(data));
+      await setItem(JSON.stringify(data));
 
       Toast.show({
         title: "Sucesso",
@@ -71,7 +75,7 @@ export function AddList({ navigation: { goBack } } : any) {
       <VStack flex={1} p={5}>
         
         <VStack>
-          <Text fontSize={23} p={5} textAlign="center" color="white">Nome</Text>
+          <Text fontSize={23} p={5} color="white">Nome</Text>
           <Input
           textAlign="center"
           color="white"
@@ -83,28 +87,47 @@ export function AddList({ navigation: { goBack } } : any) {
           />
         </VStack>
         <VStack>
-          <Text fontSize={23} p={5} textAlign="center" color="white">Descrição</Text>
+          <Text fontSize={23} p={5} color="white">Assitir</Text>
+          <Select
+          placeholder="Selecione uma opção"
+          textAlign="center"
+          fontSize={18}
+          color="white"
+          borderRadius={10}
+          borderColor="green.600"
+          onValueChange={itemValue => setAssistir(itemValue)}
+          >
+            <Select.Item alignItems="center" label="Ver mais tarde" value="Ver mais tarde" />
+            <Select.Item alignItems="center" label="Importante" value="Importante" />
+            <Select.Item alignItems="center" label="Terminar" value="Terminar" />
+          </Select>
+        </VStack>
+        
+        <VStack>
+          <Text fontSize={23} p={5} color="white">Descrição</Text>
           <Input
           textAlign="center"
           fontSize={18}
           color="white"
           borderWidth={1}
+          borderRadius={10}
           borderColor="green.600"
           onChangeText={setDescription}
           />
         </VStack>
         <VStack>
-          <Text fontSize={23} p={5} textAlign="center" color="white">Link</Text>
+          <Text fontSize={23} p={5} color="white">Link</Text>
           <Input
           textAlign="center"
           fontSize={18}
           color="white"
           borderWidth={1}
+          borderRadius={10}
           borderColor="green.600"
           onChangeText={setLink}
           />
         </VStack>
-        <VStack flex={1} alignItems="center" mt="75%">
+        <VStack flex={1} alignItems="center" mt="40%">
           
           <TouchableOpacity onPress={handleNew} style={{ backgroundColor: "#16a34a", width: 180, height: 65, justifyContent: "center", alignItems: "center", borderRadius: 15 }}>
             <Text color="success.50" fontSize={25}>Salvar</Text>
